@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/ufcstarslist/', UfcstarsAPIView.as_view()),
     path('api/v1/Ufcstarlist/', UfcstarAPIView.as_view()),
+    path('api/v1/Ufcstarlist/<int:pk>/', UfcstarAPIView.as_view()),
 ]

@@ -14,15 +14,41 @@ class UfcstarsAPIView(generics.ListAPIView):
 class UfcstarAPIView(APIView):
 
     def get(self, request):
-        list1 = Ufsstars.objects.all().values()
-        return Response({'Fighters': list(list1)})
+        w = Ufsstars.objects.all()
+        return Response({'Fighters': UfsstarsSerializer(w, many=True).data})
 
     def post(self, request):
-        new_post = Ufsstars.objects.create(
-            name=request.data['name'],
-            description=request.data['description'],
-            art_id=request.data['art_id'],
-            weight_id=request.data['weight_id']
-        )
+        serializer = UfsstarsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-        return Response({'post': model_to_dict(new_post)})
+        return Response({'post': serializer.data})
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PUT not allowed"})
+
+        try:
+            instance = Ufsstars.objects.get(pk=pk)
+        except:
+            return Response({"error":"Object does not exist"})
+
+        serializer = UfsstarsSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"post": serializer.data})
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method DELETE not allowed"})
+
+        try:
+            instance = Ufsstars.objects.get(pk=pk)
+            instance.delete()
+        except:
+            Response({"error":"Object does not exist"})
+
+        return Response({"post":"delete post" + str(pk)})
+
