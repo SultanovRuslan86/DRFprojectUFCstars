@@ -15,12 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from UFCstars.views import UfcstarsAPIView, UfcstarAPIView
+from django.urls import path, include
+from UFCstars.views import UfcstarsAPIView, UfcstarAPIView, UfcstarAPIList, UfcstarAPIupdate, UfcCRUD, UfcstarsViewSet
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'ufc', UfcstarsViewSet, basename='ufc')
+print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/ufcstarslist/', UfcstarsAPIView.as_view()),
     path('api/v1/Ufcstarlist/', UfcstarAPIView.as_view()),
+    path('api/v1/UfcstarAPIlist/', UfcstarAPIList.as_view()),
     path('api/v1/Ufcstarlist/<int:pk>/', UfcstarAPIView.as_view()),
+    path('api/v1/UfcstarUpdate/<int:pk>/', UfcstarAPIupdate.as_view()),
+    path('api/v1/UfcstarCRUD/<int:pk>/', UfcCRUD.as_view()),
+    path('api/v1/', include(router.urls)),
 ]
