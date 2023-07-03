@@ -1,16 +1,27 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from django.shortcuts import render
 from django.forms import model_to_dict
 from .models import *
 from .serializers import UfsstarsSerializer
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+
 
 
 class UfcstarsViewSet(viewsets.ModelViewSet):
     queryset = Ufsstars.objects.all()
     serializer_class = UfsstarsSerializer
+
+    def queryset_get(self):
+        pk = self.kwargs.get('pk')
+
+        if not pk:
+            return Ufsstars.objects.all()
+
+        return Ufsstars.objects.filter(pk=pk)
 
     # def get_queryset(self):
     #     pk = self.kwargs.get('pk')
@@ -33,14 +44,17 @@ class UfcstarsAPIView(generics.ListAPIView):
 class UfcstarAPIList(generics.ListCreateAPIView):
     queryset = Ufsstars.objects.all()
     serializer_class = UfsstarsSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-class UfcstarAPIupdate(generics.UpdateAPIView):
+class UfcstarAPIupdate(generics.RetrieveUpdateAPIView):
     queryset = Ufsstars.objects.all()
     serializer_class = UfsstarsSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
 
-class UfcCRUD(generics.RetrieveUpdateDestroyAPIView):
+class UfcCRUD(generics.RetrieveDestroyAPIView):
     queryset = Ufsstars.objects.all()
     serializer_class = UfsstarsSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
 class UfcstarAPIView(APIView):
 

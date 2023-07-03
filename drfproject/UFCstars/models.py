@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Ufsstars(models.Model):
@@ -8,6 +9,7 @@ class Ufsstars(models.Model):
     is_published = models.BooleanField(default=True)
     art = models.ForeignKey('Art', on_delete=models.PROTECT, null=True)
     weight = models.ForeignKey('Weight', on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

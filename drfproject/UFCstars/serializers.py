@@ -2,9 +2,11 @@ from rest_framework import serializers
 from .models import Ufsstars
 
 class UfsstarsSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Ufsstars
-        fields = ("name", "description", "art", "weight")
+        fields = '__all__'
+
 
 # class UfsstarsSerializer(serializers.Serializer):
     # name = serializers.CharField(max_length=30)
