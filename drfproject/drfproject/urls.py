@@ -25,6 +25,7 @@ print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/drf-auth', include('rest_framework.urls')),
     path('api/v1/ufcstarslist/', UfcstarsAPIView.as_view()),
     path('api/v1/Ufcstarlist/', UfcstarAPIView.as_view()),
     path('api/v1/UfcstarAPIlist/', UfcstarAPIList.as_view()),
