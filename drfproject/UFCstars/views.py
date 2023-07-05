@@ -2,7 +2,8 @@ from rest_framework import generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
 from django.shortcuts import render
 from django.forms import model_to_dict
 from .models import *
@@ -49,7 +50,8 @@ class UfcstarAPIList(generics.ListCreateAPIView):
 class UfcstarAPIupdate(generics.RetrieveUpdateAPIView):
     queryset = Ufsstars.objects.all()
     serializer_class = UfsstarsSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, BasicAuthentication, SessionAuthentication)
 
 class UfcCRUD(generics.RetrieveDestroyAPIView):
     queryset = Ufsstars.objects.all()
@@ -95,5 +97,5 @@ class UfcstarAPIView(APIView):
         except:
             Response({"error":"Object does not exist"})
 
-        return Response({"post":"delete post" + str(pk)})
+        return Response({"post": "delete post" + str(pk)})
 

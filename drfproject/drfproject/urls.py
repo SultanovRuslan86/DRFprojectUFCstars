@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from UFCstars.views import UfcstarsAPIView, UfcstarAPIView, UfcstarAPIList, UfcstarAPIupdate, UfcCRUD, UfcstarsViewSet
 from rest_framework import routers
 
@@ -33,4 +33,6 @@ urlpatterns = [
     path('api/v1/UfcstarUpdate/<int:pk>/', UfcstarAPIupdate.as_view()),
     path('api/v1/UfcstarCRUD/<int:pk>/', UfcCRUD.as_view()),
     path('api/v1/', include(router.urls)),
+    path('api/v1/auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
