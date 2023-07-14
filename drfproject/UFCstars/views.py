@@ -2,6 +2,7 @@ from rest_framework import generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
 from django.shortcuts import render
@@ -11,10 +12,16 @@ from .serializers import UfsstarsSerializer
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 
 
+class UfcAPIlistPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
 
 class UfcstarsViewSet(viewsets.ModelViewSet):
     queryset = Ufsstars.objects.all()
     serializer_class = UfsstarsSerializer
+    pagination_class = UfcAPIlistPagination
 
     def queryset_get(self):
         pk = self.kwargs.get('pk')
